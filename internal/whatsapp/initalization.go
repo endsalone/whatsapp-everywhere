@@ -22,7 +22,11 @@ func Connect() {
 		log.Errorf("Error when create a session: %v", err)
 	}
 
-	log.Printf("%s\n", sess)
+	log.Debugf("Session value: %s", session)
+
+	defer Connect()
+
+	<-time.After(1 * time.Second)
 }
 
 func login(wac *whatsapp.Conn) (whatsapp.Session, error) {
