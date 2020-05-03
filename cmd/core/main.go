@@ -1,10 +1,9 @@
 package main
 
-import  (
-	whats ""
+import (
+	whats "github.com/endsalone/whatsapp-everywhere/internal/whatsapp"
 )
 
 func main() {
-	go func() {
-	}()
+	whats.Connect()
 }
