@@ -3,24 +3,35 @@ package whatsapp
 import (
 	"fmt"
 	"github.com/Rhymen/go-whatsapp"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"time"
 )
 
-func Conection() {
-	wac, err := whatsapp.NewConn(10 * time.Second)
+func Connect() {
+	wac, err := whatsapp.NewConn(1 * time.Second)
 	if err != nil {
-		log.Fatal(err)
+		log.Errorf("Error: %s", err)
 	}
-	qrChan := make(chan string)
-	go func() {
-		fmt.Printf("qr code %s\n", <-qrChan)
-	}()
 
-	sess, sessErr := wac.Login(qrChan)
-	if sessErr != nil {
-		log.Fatal(sessErr)
+	wac.SetClientVersion(0, 6, 0)
+
+	wac.AddHandler(&Handler{wac, uint64(time.Now().Unix())})
+
+	session, err := login(wac)
+	if err != nil {
+		log.Errorf("Error when create a session: %v", err)
 	}
 
 	log.Printf("%s\n", sess)
+}
+
+func login(wac *whatsapp.Conn) (whatsapp.Session, error) {
+	qrChan := make(chan string)
+	go func() {
+		fmt.Printf("qr code: %v\n", <-qrChan)
+	}()
+
+	session, err := wac.Login(qrChan)
+
+	return session, err
 }
