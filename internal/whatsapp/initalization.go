@@ -1,9 +1,11 @@
 package whatsapp
 
 import (
+	"encoding/gob"
 	"fmt"
 	"github.com/Rhymen/go-whatsapp"
 	log "github.com/sirupsen/logrus"
+	"os"
 	"time"
 )
 
@@ -38,4 +40,22 @@ func login(wac *whatsapp.Conn) (whatsapp.Session, error) {
 	session, err := wac.Login(qrChan)
 
 	return session, err
+}
+
+func readSession() (whatsapp.Session, error) {
+	session := whatsapp.Session{}
+
+	file, err := os.Open("this-is-my-session.gob")
+	if err != nil {
+		return session, err
+	}
+	defer file.Close()
+
+	decoder := gob.NewDecoder(file)
+	err = decoder.Decode(&session)
+	if err != nil {
+		return session, err
+	}
+
+	return session, nil
 }
