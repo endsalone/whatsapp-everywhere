@@ -1,9 +1,14 @@
 package main
 
 import (
-	whats "github.com/endsalone/whatsapp-everywhere/internal/whatsapp"
+	"github.com/endsalone/whatsapp-everywhere/config"
+	"github.com/endsalone/whatsapp-everywhere/internal/httpclient"
+	"github.com/endsalone/whatsapp-everywhere/internal/whatsapp"
 )
 
 func main() {
-	whats.Connect()
+	config.Setup()
+	httpclient.Setup()
+
+	whatsapp.Connect()
 }
