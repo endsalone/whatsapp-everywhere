@@ -20,18 +20,18 @@ type contact struct {
 }
 
 func (h *handler) HandleError(err error) {
-	//if e, ok := err.(*whatsapp.ErrConnectionFailed); ok {
-	//	log.Printf("Connection failed, underlying error: %v", e.Err)
-	//	log.Println("Waiting 30sec...")
-	//	<-time.After(30 * time.Second)
-	//	log.Println("Reconnecting...")
-	//	err := h.Wac.Restore()
-	//	if err != nil {
-	//		log.Fatalf("Restore failed: %v", err)
-	//	}
-	//} else {
-	//	log.Errorf("Handler Error: %s\n", err)
-	//}
+	if e, ok := err.(*whatsapp.ErrConnectionFailed); ok {
+		log.Printf("Connection failed, underlying error: %v", e.Err)
+		log.Println("Waiting 30sec...")
+		<-time.After(30 * time.Second)
+		log.Println("Reconnecting...")
+		err := h.Wac.Restore()
+		if err != nil {
+			log.Fatalf("Restore failed: %v", err)
+		}
+	} else {
+		log.Errorf("Handler Error: %s\n", err)
+	}
 }
 
 func (h *handler) ShouldCallSynchronously() bool {
